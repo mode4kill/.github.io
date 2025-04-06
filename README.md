@@ -11,7 +11,7 @@ mode4kill.github.io
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Welcome to My Website!</h1>
+  <h1>Hey Bro, stfu</h1>
   <p>This is hosted using GitHub Pages 🚀</p>
 </body>
 </html>
