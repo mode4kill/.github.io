@@ -5,12 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mode4kill</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      background-color: #f4f4f4;
+    /* Reset & scroll fix */
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
       margin: 0;
       padding: 0;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: hidden; /* 💥 fixes horizontal scroll */
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
     }
 
     .page {
@@ -19,11 +27,13 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
+      width: 100vw; /* Ensures it fits the viewport width */
       height: 100vh;
       padding: 40px;
       transition: opacity 0.5s ease;
       background-color: #f4f4f4;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     .page.active {
@@ -66,16 +76,15 @@
 
   <script>
     function showPage(pageId) {
-      // Get all pages
-      const pages = document.querySelectorAll('.page');
-      pages.forEach(page => {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(page => {
         page.classList.remove('active');
       });
 
-      // Short delay to allow the transition
+      // Show selected page after small delay
       setTimeout(() => {
         document.getElementById(pageId).classList.add('active');
-      }, 50); // small delay to trigger animation
+      }, 50);
     }
   </script>
 </body>
