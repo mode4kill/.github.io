@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe | mode4kill</title>
+  <link rel="icon" href="https://i.imgur.com/N7rlQYt.png" type="image/png" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 30px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 10px;
+      justify-content: center;
+      margin: 40px auto;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: #fff;
+      font-size: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: background-color 0.2s;
+    }
+
+    .cell:hover {
+      background-color: #f0f0f0;
+    }
+
+    .status {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #222;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+
+    .back-btn {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Tic Tac Toe vs AI 🤖</h1>
+  <div class="status" id="status">Your move!</div>
+  <div class="board" id="board"></div>
+  <button onclick="resetGame()">Restart</button>
+  <br>
+  <a href="index.html"><button class="back-btn">⬅ Back to Main Site</button></a>
+
+  <script>
+    const board = document.getElementById('board');
+    const statusText = document.getElementById('status');
+    let cells = Array(9).fill(null);
+    let gameOver = false;
+
+    function createBoard() {
+      board.innerHTML = '';
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        cell.addEventListener('click', handleMove);
+        board.appendChild(cell);
+      }
+    }
+
+    function handleMove(e) {
+      const index = e.target.dataset.index;
+      if (cells[index] || gameOver) return;
+
+      cells[index] = 'X';
+      e.target.textContent = 'X';
+
+      if (checkWin('X')) return endGame('You win! 🎉');
+
+      if (cells.every(cell => cell)) return endGame('Draw!');
+
+      aiMove();
+    }
+
+    function aiMove() {
+      let empty = cells.map((val, idx) => val ? null : idx).filter(v => v !== null);
+      if (empty.length === 0) return;
+
+      let randomIndex = empty[Math.floor(Math.random() * empty.length)];
+      cells[randomIndex] = 'O';
+
+      let cellDiv = board.querySelector(`[data-index='${randomIndex}']`);
+      cellDiv.textContent = 'O';
+
+      if (checkWin('O')) return endGame('AI wins 😈');
+    }
+
+    function checkWin(player) {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      return winPatterns.some(pattern =>
+        pattern.every(idx => cells[idx] === player)
+      );
+    }
+
+    function endGame(message) {
+      gameOver = true;
+      statusText.textContent = message;
+    }
+
+    function resetGame() {
+      cells = Array(9).fill(null);
+      gameOver = false;
+      statusText.textContent = 'Your move!';
+      createBoard();
+    }
+
+    createBoard();
+  </script>
+</body>
+</html>
