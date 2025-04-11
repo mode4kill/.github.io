@@ -24,7 +24,7 @@
       grid-template-rows: repeat(3, 100px);
       gap: 10px;
       justify-content: center;
-      margin: 40px auto;
+      margin: 30px auto;
     }
 
     .cell {
@@ -41,23 +41,41 @@
       transition: background-color 0.2s;
     }
 
+    .cell.marked {
+      animation: pop 0.25s ease-out;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.3); opacity: 0.3; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
     .cell:hover {
       background-color: #f0f0f0;
     }
 
     .status {
       font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .controls {
       margin-bottom: 20px;
     }
 
-    button {
-      padding: 10px 20px;
+    select, button {
+      padding: 10px 15px;
       font-size: 16px;
+      margin: 5px;
       background-color: #222;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+    }
+
+    select {
+      background-color: #333;
     }
 
     button:hover {
@@ -72,14 +90,23 @@
 <body>
   <h1>Tic Tac Toe vs AI 🤖</h1>
   <div class="status" id="status">Your move!</div>
+  <div class="controls">
+    <label for="difficulty">Difficulty:</label>
+    <select id="difficulty">
+      <option value="easy">Easy</option>
+      <option value="medium" selected>Medium</option>
+      <option value="hard">Hard</option>
+    </select>
+    <button onclick="resetGame()">Restart</button>
+  </div>
+
   <div class="board" id="board"></div>
-  <button onclick="resetGame()">Restart</button>
-  <br>
   <a href="index.html"><button class="back-btn">⬅ Back to Main Site</button></a>
 
   <script>
     const board = document.getElementById('board');
     const statusText = document.getElementById('status');
+    const difficultySelect = document.getElementById('difficulty');
     let cells = Array(9).fill(null);
     let gameOver = false;
 
@@ -100,36 +127,118 @@
 
       cells[index] = 'X';
       e.target.textContent = 'X';
+      e.target.classList.add('marked');
 
       if (checkWin('X')) return endGame('You win! 🎉');
-
       if (cells.every(cell => cell)) return endGame('Draw!');
 
-      aiMove();
+      setTimeout(aiMove, 300); // slight delay for realism
     }
 
     function aiMove() {
-      let empty = cells.map((val, idx) => val ? null : idx).filter(v => v !== null);
-      if (empty.length === 0) return;
+      const diff = difficultySelect.value;
+      let index = null;
 
-      let randomIndex = empty[Math.floor(Math.random() * empty.length)];
-      cells[randomIndex] = 'O';
+      if (diff === 'easy') {
+        index = randomMove();
+      } else if (diff === 'medium') {
+        index = mediumAI();
+      } else {
+        index = minimax(cells, 'O').index;
+      }
 
-      let cellDiv = board.querySelector(`[data-index='${randomIndex}']`);
+      if (index == null) return;
+      cells[index] = 'O';
+
+      const cellDiv = board.querySelector(`[data-index="${index}"]`);
       cellDiv.textContent = 'O';
+      cellDiv.classList.add('marked');
 
       if (checkWin('O')) return endGame('AI wins 😈');
+      if (cells.every(cell => cell)) return endGame('Draw!');
     }
 
-    function checkWin(player) {
+    function randomMove() {
+      const empty = cells.map((v, i) => v ? null : i).filter(i => i != null);
+      return empty.length ? empty[Math.floor(Math.random() * empty.length)] : null;
+    }
+
+    function mediumAI() {
+      const win = findWinningMove('O') || findWinningMove('X') || randomMove();
+      return win;
+    }
+
+    function findWinningMove(player) {
+      const winPatterns = [
+        [0,1,2],[3,4,5],[6,7,8],
+        [0,3,6],[1,4,7],[2,5,8],
+        [0,4,8],[2,4,6]
+      ];
+      for (let pattern of winPatterns) {
+        const [a,b,c] = pattern;
+        const values = [cells[a], cells[b], cells[c]];
+        const count = values.filter(v => v === player).length;
+        const emptyIndex = [a,b,c].find(i => !cells[i]);
+        if (count === 2 && emptyIndex !== undefined) return emptyIndex;
+      }
+      return null;
+    }
+
+    function minimax(boardState, player) {
+      const avail = boardState.map((v, i) => v ? null : i).filter(i => i != null);
+
+      if (checkWinner(boardState, 'X')) return { score: -10 };
+      if (checkWinner(boardState, 'O')) return { score: 10 };
+      if (avail.length === 0) return { score: 0 };
+
+      const moves = [];
+
+      for (let i of avail) {
+        const newBoard = [...boardState];
+        newBoard[i] = player;
+
+        const result = minimax(newBoard, player === 'O' ? 'X' : 'O');
+        moves.push({
+          index: i,
+          score: result.score
+        });
+      }
+
+      let bestMove;
+      if (player === 'O') {
+        let bestScore = -Infinity;
+        for (let move of moves) {
+          if (move.score > bestScore) {
+            bestScore = move.score;
+            bestMove = move;
+          }
+        }
+      } else {
+        let bestScore = Infinity;
+        for (let move of moves) {
+          if (move.score < bestScore) {
+            bestScore = move.score;
+            bestMove = move;
+          }
+        }
+      }
+
+      return bestMove;
+    }
+
+    function checkWinner(boardState, player) {
       const winPatterns = [
         [0,1,2],[3,4,5],[6,7,8],
         [0,3,6],[1,4,7],[2,5,8],
         [0,4,8],[2,4,6]
       ];
       return winPatterns.some(pattern =>
-        pattern.every(idx => cells[idx] === player)
+        pattern.every(i => boardState[i] === player)
       );
+    }
+
+    function checkWin(player) {
+      return checkWinner(cells, player);
     }
 
     function endGame(message) {
