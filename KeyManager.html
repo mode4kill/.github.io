@@ -2,77 +2,104 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <title>Key Manager – Download</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Key Manager Download</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       margin: 0;
-      padding: 0;
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #fff;
+      background-color: #f3f3f3;
+      color: #111;
+    }
+
+    header {
+      background-color: #1e1e1e;
+      padding: 1rem 2rem;
       display: flex;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      color: white;
+      font-size: 1.2rem;
+      margin: 0;
+    }
+
+    nav a {
+      color: #ccc;
+      margin-left: 1rem;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: white;
     }
 
     .container {
-      background-color: rgba(255, 255, 255, 0.05);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+      max-width: 700px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       text-align: center;
-      max-width: 400px;
-      width: 100%;
     }
 
-    h1 {
-      font-size: 2em;
-      margin-bottom: 0.5em;
+    .container h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
     }
 
-    p {
-      font-size: 1em;
-      margin-bottom: 1.5em;
-      color: #ddd;
+    .container p {
+      color: #555;
+      font-size: 1rem;
+      margin-bottom: 2rem;
     }
 
     .download-btn {
-      background: #4CAF50;
+      background: #111;
       color: white;
-      padding: 12px 24px;
       text-decoration: none;
+      padding: 12px 24px;
       font-weight: 600;
+      font-size: 1rem;
       border-radius: 8px;
       transition: background 0.3s ease;
-      display: inline-block;
     }
 
     .download-btn:hover {
-      background: #45a049;
+      background: #333;
     }
 
     footer {
-      margin-top: 30px;
-      font-size: 0.9em;
-      color: #aaa;
+      text-align: center;
+      margin-top: 3rem;
+      color: #888;
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
+
+  <header>
+    <h1>🎧 Clixeris Tools</h1>
+    <nav>
+      <a href="index.html">← Back to Music</a>
+    </nav>
+  </header>
+
   <div class="container">
-    <h1>Download Key Manager</h1>
-    <p>Securely store and manage your passwords with our AES-encrypted Key Manager app.</p>
-    <a href="downloads/KeyManager.exe" class="download-btn" download>Download Now</a>
-    <footer>
-      <p>© 2025 Clixeris. All rights reserved.</p>
-    </footer>
+    <h2>Download Key Manager</h2>
+    <p>Secure your passwords with our AES-encrypted Key Manager tool. Easy to use, lightweight, and offline-safe.</p>
+    <a href="downloads/KeyManager.exe" class="download-btn" download>Download KeyManager.exe</a>
   </div>
+
+  <footer>
+    © 2025 Clixeris – Built with care 🎵🔐
+  </footer>
+
 </body>
 </html>
